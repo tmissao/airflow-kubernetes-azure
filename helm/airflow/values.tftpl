@@ -1,0 +1,95 @@
+executor: CeleryExecutor
+fernetKey: wF3D9vdlHWm4liB8r90gvRjvgGPTHjREB9SI8hNF31U=
+webserverSecretKey: 06d12648d9f535f8c5e51c9e9a49571b
+
+images:
+  airflow:
+    repository: ${AIRFLOW_IMAGE_REPOSITORY}
+    tag: ${AIRFLOW_IMAGE_TAG}
+
+config:
+  core:
+    logging_level: "DEBUG"
+    fab_logging_level: "DEBUG"
+  logging:
+    # enable this variable for external logs
+    remote_logging: "False"
+    remote_base_log_folder: wasb://wasb-${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net
+    # remote_log_conn_id: "wasb_logs"
+    remote_log_conn_id: "wasb_default"
+
+env:
+  - name: AIRFLOW__CORE__LOAD_EXAMPLES
+    value: "False"
+
+dags:
+  persistence:
+    enabled: False
+  gitSync:
+    enabled: True
+    repo: https://github.com/tmissao/airflow-kubernetes-azure
+    branch: master
+    subPath: python/dags
+
+ingress:
+  web:
+    enabled: True
+    ingressClassName: nginx
+
+data:
+  brokerUrl: rediss://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}
+  metadataConnection:
+    user: ${POSTGRES_USER}
+    pass: ${POSTGRES_PASSWORD}
+    protocol: postgresql
+    host: ${POSTGRES_HOST}
+    port: 5432
+    db: ${POSTGRES_DATABASE}
+
+postgresql:
+  enabled: false
+
+pgbouncer:
+  enabled: true
+  sslmode: require
+
+redis:
+  enabled: false
+
+flower:
+  enabled: false
+
+statsd:
+  enabled: false
+
+webserver:
+  defaultUser:
+    username: tmissao
+    password: 123ate5
+    firstName: Tiago
+    lastName: Missão
+
+logs:
+  persistence:
+    enabled: false
+
+workers:
+  persistence:
+    enabled: true
+
+# secret:
+#   - envName: "AIRFLOW_CONN_WASB_LOGS"
+#     secretName: "airflow-connections"
+#     secretKey: "AIRFLOW_CONN_WASB_LOGS"
+
+# extraSecrets:
+#   airflow-connections:
+#     data: |
+#       AIRFLOW_CONN_WASB_LOGS: ${AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING}
+
+createUserJob:
+  useHelmHooks: false
+  applyCustomEnv: false
+migrateDatabaseJob:
+  useHelmHooks: false
+  applyCustomEnv: false

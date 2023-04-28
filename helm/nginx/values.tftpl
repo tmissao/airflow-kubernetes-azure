@@ -1,0 +1,7 @@
+controller:
+  service:
+    enabled: true
+    loadBalancerIP: ${LOADBALANCE_IP}
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: ${RESOURCE_GROUP_NAME}
