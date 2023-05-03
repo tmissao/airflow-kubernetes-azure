@@ -8,9 +8,6 @@ images:
     tag: ${AIRFLOW_IMAGE_TAG}
 
 config:
-  secrets:
-    backend: 'airflow.providers.microsoft.azure.secrets.key_vault.AzureKeyVaultBackend'
-    backend_kwargs: '{"connections_prefix": "${KEYVAULT_CONNECTIONS_PREFIX}", "variables_prefix": "${KEYVAULT_VARIABLES_PREFIX}", "vault_url": "${AZURE_KEYVAULT_URI}"}'
   core:
     logging_level: "DEBUG"
     fab_logging_level: "DEBUG"
@@ -34,6 +31,10 @@ env:
     value: ${AZURE_CLIENT_ID}
   - name: AZURE_CLIENT_SECRET
     value: ${AZURE_CLIENT_SECRET}
+  - name: AIRFLOW__SECRETS__BACKEND
+    value: "airflow.providers.microsoft.azure.secrets.key_vault.AzureKeyVaultBackend"
+  - name: AIRFLOW__SECRETS__BACKEND_KWARGS
+    value: '{"connections_prefix": "${KEYVAULT_CONNECTIONS_PREFIX}", "variables_prefix": "${KEYVAULT_VARIABLES_PREFIX}", "vault_url": "${AZURE_KEYVAULT_URI}"}'
 
 dags:
   persistence:

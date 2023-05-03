@@ -13,7 +13,9 @@ default_args = {
 }
 
 def get_secrets(**kwargs):
-    variable = AzureKeyVaultBackend.get_variable(kwargs["var_name"])
+    print(f'value var_name is {kwargs["var_name"]}')
+    print(f'value from kwargs is {kwargs}')
+    variable = AzureKeyVaultBackend.get_variable(key = kwargs["var_name"])
     print(variable)
 
 with DAG(
