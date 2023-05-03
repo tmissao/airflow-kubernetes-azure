@@ -12,6 +12,8 @@ data "azurerm_subscription" "current" {}
 
 data "azurerm_client_config" "current" {}
 
+data "azuread_client_config" "current" {}
+
 variable "resource_group" {
   type = object({
     name = string, 
@@ -175,6 +177,16 @@ variable "storage_account" {
   }
 }
 
+variable "keyvault" {
+  default = {
+    name = "poc-airflow-kv"
+    sku_name = "standard"
+    purge_protection_enabled = false
+    enabled_for_disk_encryption = true
+    soft_delete_retention_days = 7
+  }
+}
+
 variable nginx_public_ip {
   type = object({
     name                = string
@@ -205,6 +217,15 @@ variable "airflow_custom_image" {
   default = {
     dockerfile_path = "../docker/airflow" 
     acr_image_path = "airflow"
+  }
+}
+
+variable "airflow" {
+  default = {
+    chart_name = "airflow"
+    chart_version = "1.9.0"
+    keyvault_connections_prefix = "airflow-connections"
+    keyvault_variables_prefix = "airflow-variables"
   }
 }
 

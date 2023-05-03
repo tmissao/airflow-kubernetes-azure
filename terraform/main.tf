@@ -63,9 +63,41 @@ resource "azurerm_storage_account" "this" {
 }
 
 resource "azurerm_storage_container" "this" {
-  name                  = "airflow"
+  name                  = "airflow-logs"
   storage_account_name  = azurerm_storage_account.this.name
   container_access_type = "private"
+}
+
+resource "azurerm_key_vault" "this" {
+  name                        = var.keyvault.name
+  location                    = azurerm_resource_group.this.location
+  resource_group_name         = azurerm_resource_group.this.name
+  enabled_for_disk_encryption = var.keyvault.enabled_for_disk_encryption
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  soft_delete_retention_days  = var.keyvault.soft_delete_retention_days
+  purge_protection_enabled    = var.keyvault.purge_protection_enabled
+  sku_name = var.keyvault.sku_name
+  dynamic "access_policy" {
+    for_each = [
+      data.azurerm_client_config.current.object_id,
+      azuread_application.this.object_id
+    ]
+    content {
+      tenant_id = data.azurerm_client_config.current.tenant_id
+      object_id = access_policy.value
+      secret_permissions = [
+        "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
+      ] 
+    }
+  }
+  tags = local.tags
+}
+
+resource "azurerm_key_vault_secret" "my_secret" {
+  name         = "${var.airflow.keyvault_variables_prefix}-my-secret"
+  value        = "hello from secret!"
+  key_vault_id = azurerm_key_vault.this.id
+  tags = local.tags
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
@@ -171,4 +203,13 @@ resource "null_resource" "build_airflow_docker_image" {
   depends_on = [
     azurerm_role_assignment.allow_user_to_pull_push
   ]
+}
+
+resource "azuread_application" "this" {
+  display_name     = "airflow"
+  owners = [data.azuread_client_config.current.object_id]
+}
+
+resource "azuread_application_password" "this" {
+  application_object_id = azuread_application.this.object_id
 }

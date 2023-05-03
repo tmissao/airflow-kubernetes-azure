@@ -8,19 +8,32 @@ images:
     tag: ${AIRFLOW_IMAGE_TAG}
 
 config:
+  secrets:
+    backend: 'airflow.providers.microsoft.azure.secrets.key_vault.AzureKeyVaultBackend'
+    backend_kwargs: '{"connections_prefix": "${KEYVAULT_CONNECTIONS_PREFIX}", "variables_prefix": "${KEYVAULT_VARIABLES_PREFIX}", "vault_url": "${AZURE_KEYVAULT_URI}"}'
   core:
     logging_level: "DEBUG"
     fab_logging_level: "DEBUG"
   logging:
-    # enable this variable for external logs
-    remote_logging: "False"
-    remote_base_log_folder: wasb://wasb-${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net
-    # remote_log_conn_id: "wasb_logs"
-    remote_log_conn_id: "wasb_default"
+    # # enable this variable for external logs
+    # remote_logging: "False"
+    # remote_base_log_folder: wasb://wasb-${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net
+    # # remote_log_conn_id: "wasb_logs"
+    # remote_log_conn_id: "wasb_default"
+    remote_logging: False
+    remote_log_conn_id: azure_blob_storage_conn
+    remote_base_log_folder: '${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net'
+    # remote_base_log_folder: '${AIRFLOW_LOG_CONTAINER}-logs@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net/test'
 
 env:
   - name: AIRFLOW__CORE__LOAD_EXAMPLES
     value: "False"
+  - name: AZURE_TENANT_ID
+    value: ${AZURE_TENANT_ID}
+  - name: AZURE_CLIENT_ID
+    value: ${AZURE_CLIENT_ID}
+  - name: AZURE_CLIENT_SECRET
+    value: ${AZURE_CLIENT_SECRET}
 
 dags:
   persistence:
@@ -84,8 +97,8 @@ workers:
 
 # extraSecrets:
 #   airflow-connections:
-#     data: |
-#       AIRFLOW_CONN_WASB_LOGS: ${AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING}
+#     data:
+#       AIRFLOW_CONN_WASB_LOGS: 'wasb://${AIRFLOW_LOG_STORAGE_ACCOUNT}:${AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING}'
 
 createUserJob:
   useHelmHooks: false

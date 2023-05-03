@@ -30,11 +30,11 @@ resource "helm_release" "nginx" {
 }
 
 resource "helm_release" "airflow" {
-  name       = "airflow"
+  name       = var.airflow.chart_name
   repository = "https://airflow.apache.org"
   chart      = "airflow"
   namespace  = one(kubernetes_namespace.airflow.metadata).name
-  version = "1.8.0"
+  version = var.airflow.chart_version
   values = [
     templatefile("../helm/airflow/values.tftpl", {
       AIRFLOW_IMAGE_REPOSITORY = "${azurerm_container_registry.this.name}.azurecr.io/${var.airflow_custom_image.acr_image_path}"
@@ -46,9 +46,15 @@ resource "helm_release" "airflow" {
       REDIS_HOST = azurerm_redis_cache.this.hostname
       REDIS_PORT = azurerm_redis_cache.this.ssl_port
       REDIS_PASSWORD = nonsensitive(azurerm_redis_cache.this.primary_access_key)
-      AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING = base64encode("wasb://${azurerm_storage_account.this.name}:${nonsensitive(azurerm_storage_account.this.primary_access_key)}")
+      AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING = base64encode("wasb://${azurerm_storage_account.this.name}:${urlencode(nonsensitive(azurerm_storage_account.this.primary_access_key))}")
       AIRFLOW_LOG_STORAGE_ACCOUNT = azurerm_storage_account.this.name
       AIRFLOW_LOG_CONTAINER = azurerm_storage_container.this.name
+      AZURE_KEYVAULT_URI = azurerm_key_vault.this.vault_uri
+      AZURE_TENANT_ID = data.azurerm_client_config.current.tenant_id
+      AZURE_CLIENT_ID = azuread_application.this.application_id
+      AZURE_CLIENT_SECRET = nonsensitive(azuread_application_password.this.value)
+      KEYVAULT_CONNECTIONS_PREFIX = var.airflow.keyvault_connections_prefix
+      KEYVAULT_VARIABLES_PREFIX = var.airflow.keyvault_variables_prefix
     })
   ]
   depends_on = [

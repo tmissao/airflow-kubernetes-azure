@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.48.0"
     }
+    azuread = {
+      source = "hashicorp/azuread"
+      version = "2.38.0"
+    }
     kubernetes = {
       source = "hashicorp/kubernetes"
       version = "2.19.0"
@@ -15,10 +19,13 @@ terraform {
   }
 }
 
+provider "azuread" {}
+
 provider "azurerm" {
   features {
     key_vault {
       purge_soft_delete_on_destroy = true
+      recover_soft_deleted_key_vaults = true
     }
     resource_group {
       prevent_deletion_if_contains_resources = false

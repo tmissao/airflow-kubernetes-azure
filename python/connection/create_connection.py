@@ -4,13 +4,13 @@ from airflow.models.connection import Connection
 # extra_dict = {}
 
 c = Connection(
-    conn_id="slack_conn",
-    conn_type="slackwebhook",
-    # login="hive",
-    password="T04LZFUE80G/B04LZHCBW56/myTs1kwce7xhNvBGvb3HDbv0",
-    host="hooks.slack.com/services",
+    conn_id="wasb_logs",
+    conn_type="wasb",
+    login="pocmissaoairflow",
+    password="1GNL8WrsqJEfYWaVZrfNXn/Nnhp1PxhBPTxPuBpLbTgYIDZhQ1jqpiFQIEndEA0DJfalB8pZWlgO+ASt769BOQ==",
+    #host="hooks.slack.com/services",
     # port=7077,
-    schema="https",
+    #schema="https",
     # extra=json.dumps(extra_dict),
 )
 
