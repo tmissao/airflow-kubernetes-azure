@@ -15,7 +15,7 @@ default_args = {
 def get_secrets(**kwargs):
     print(f'value var_name is {kwargs["var_name"]}')
     variable = Variable.get(kwargs["var_name"])
-    print(variable)
+    print(f'the value of the secret is: ${variable}')
 
 with DAG(
   dag_id='secrets-test', 
