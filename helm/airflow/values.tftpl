@@ -29,8 +29,8 @@ env:
     value: ${AZURE_TENANT_ID}
   - name: AZURE_CLIENT_ID
     value: ${AZURE_CLIENT_ID}
-  - name: AZURE_CLIENT_SECRET
-    value: ${AZURE_CLIENT_SECRET}
+  # - name: AZURE_CLIENT_SECRET
+  #   value: ${AZURE_CLIENT_SECRET}
   - name: AIRFLOW__SECRETS__BACKEND
     value: "airflow.providers.microsoft.azure.secrets.key_vault.AzureKeyVaultBackend"
   - name: AIRFLOW__SECRETS__BACKEND_KWARGS
@@ -91,12 +91,15 @@ workers:
   persistence:
     enabled: true
 
-# secret:
-#   - envName: "AIRFLOW_CONN_WASB_LOGS"
-#     secretName: "airflow-connections"
-#     secretKey: "AIRFLOW_CONN_WASB_LOGS"
+secret:
+  - envName: "AZURE_CLIENT_SECRET"
+    secretName: "azure-airflow-secrets"
+    secretKey: "azure-client-secret"
 
-# extraSecrets:
+extraSecrets:
+  azure-airflow-secrets:
+    data: |
+      azure-client-secret: '${AZURE_CLIENT_SECRET}'
 #   airflow-connections:
 #     data:
 #       AIRFLOW_CONN_WASB_LOGS: 'wasb://${AIRFLOW_LOG_STORAGE_ACCOUNT}:${AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING}'

@@ -52,7 +52,7 @@ resource "helm_release" "airflow" {
       AZURE_KEYVAULT_URI = azurerm_key_vault.this.vault_uri
       AZURE_TENANT_ID = data.azurerm_client_config.current.tenant_id
       AZURE_CLIENT_ID = azuread_application.this.application_id
-      AZURE_CLIENT_SECRET = nonsensitive(azuread_application_password.this.value)
+      AZURE_CLIENT_SECRET = base64encode(nonsensitive(azuread_application_password.this.value))
       KEYVAULT_CONNECTIONS_PREFIX = var.airflow.keyvault_connections_prefix
       KEYVAULT_VARIABLES_PREFIX = var.airflow.keyvault_variables_prefix
     })
