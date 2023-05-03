@@ -29,8 +29,6 @@ env:
     value: ${AZURE_TENANT_ID}
   - name: AZURE_CLIENT_ID
     value: ${AZURE_CLIENT_ID}
-  # - name: AZURE_CLIENT_SECRET
-  #   value: ${AZURE_CLIENT_SECRET}
   - name: AIRFLOW__SECRETS__BACKEND
     value: "airflow.providers.microsoft.azure.secrets.key_vault.AzureKeyVaultBackend"
   - name: AIRFLOW__SECRETS__BACKEND_KWARGS
