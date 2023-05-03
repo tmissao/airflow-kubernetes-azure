@@ -16,6 +16,8 @@ def get_secrets(**kwargs):
     print(f'value var_name is {kwargs["var_name"]}')
     variable = Variable.get(kwargs["var_name"])
     print(f'the value of the secret is: ${variable}')
+    for x in variable:
+        print(f'secret: {x}')
 
 with DAG(
   dag_id='secrets-test', 
