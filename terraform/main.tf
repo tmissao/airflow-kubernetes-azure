@@ -80,7 +80,7 @@ resource "azurerm_key_vault" "this" {
   dynamic "access_policy" {
     for_each = [
       data.azurerm_client_config.current.object_id,
-      azuread_application.this.object_id
+      azuread_service_principal.this.object_id
     ]
     content {
       tenant_id = data.azurerm_client_config.current.tenant_id
@@ -212,4 +212,10 @@ resource "azuread_application" "this" {
 
 resource "azuread_application_password" "this" {
   application_object_id = azuread_application.this.object_id
+}
+
+resource "azuread_service_principal" "this" {
+  application_id               = azuread_application.this.application_id
+  app_role_assignment_required = true
+  owners                       = [data.azuread_client_config.current.object_id]
 }
