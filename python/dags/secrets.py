@@ -1,8 +1,8 @@
 import pendulum
 from airflow import DAG
+from airflow.models import Variable
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
-from airflow.providers.microsoft.azure.secrets.key_vault import AzureKeyVaultBackend
 
 default_args = {
     'start_date': datetime(2023, 1, 26),
@@ -14,7 +14,7 @@ default_args = {
 
 def get_secrets(**kwargs):
     print(f'value var_name is {kwargs["var_name"]}')
-    variable = AzureKeyVaultBackend.get_variable(kwargs["var_name"])
+    variable = Variable.get(kwargs["var_name"])
     print(variable)
 
 with DAG(
