@@ -24,7 +24,7 @@ def get_secrets(**kwargs):
 
 def write_file(**kwargs):
     filename = kwargs["filename"]
-    content = kwargs.xcom_pull(task_ids=['get_secret'])
+    content = kwargs['ti'].xcom_pull(task_ids=['get_secret'])
     print(f'writing file {pathlib.Path().resolve()}/{filename}')
     f = open(filename, "w")
     f.write(f"This is my demo file!\n The secret is {content[0]}")
