@@ -25,7 +25,7 @@ def get_secrets(**kwargs):
 
 def write_file(ti, templates_dict):
     content = ti.xcom_pull(task_ids=['get_secret'])
-    file = f'{pathlib.Path().resolve()}{templates_dict["filename"]}'
+    file = f'{pathlib.Path().resolve()}/{templates_dict["filename"]}'
     print(f'writing file {file}')
     f = open(file, "w")
     f.write(f"This is my demo file!\nThe secret is {content[0]}\n")
