@@ -7,7 +7,7 @@ c = Connection(
     conn_id="wasb_logs",
     conn_type="wasb",
     login="pocmissaoairflow",
-    password="1GNL8WrsqJEfYWaVZrfNXn/Nnhp1PxhBPTxPuBpLbTgYIDZhQ1jqpiFQIEndEA0DJfalB8pZWlgO+ASt769BOQ==",
+    password="ge98H85rpuLdvVbe+ias/W6JMHZRFflYa0fZaS9+pgzvZH006mTnkqoXJhnRObixbGYyEfpNr9J2+AStyqXd+A==",
     #host="hooks.slack.com/services",
     # port=7077,
     #schema="https",

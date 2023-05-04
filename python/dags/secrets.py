@@ -57,9 +57,9 @@ with DAG(
 
     task3 = LocalFilesystemToWasbOperator(
         task_id='send_to_blob',
-        wasb_conn_id='wasb_blob',
+        wasb_conn_id='azure-storage',
         file_path='/opt/airflow/demo.txt',
-        container_name='test',
+        container_name='upload',
         create_container=True,
         blob_name='demo.txt'
     )
