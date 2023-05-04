@@ -22,7 +22,7 @@ def get_secrets(**kwargs):
 
 
 def write_file(**kwargs):
-    filename = kwargs["filename"]}
+    filename = kwargs["filename"]
     print(f'writing file {pathlib.Path().resolve()}/{filename}')
     f = open(filename, "w")
     f.write("This is my demo file!")
