@@ -3,6 +3,7 @@ from airflow import DAG
 from airflow.models import Variable
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
+import pathlib
 
 default_args = {
     'start_date': datetime(2023, 1, 26),
@@ -19,6 +20,15 @@ def get_secrets(**kwargs):
     for x in variable:
         print(f'secret: {x}')
 
+
+def write_file(**kwargs):
+    filename = kwargs["filename"]}
+    print(f'writing file {pathlib.Path().resolve()}/{filename}')
+    f = open(filename, "w")
+    f.write("This is my demo file!")
+    f.close()
+
+
 with DAG(
   dag_id='secrets-test', 
   schedule_interval="*/60 * * * *", 
@@ -33,3 +43,13 @@ with DAG(
             'var_name' : 'my-secret'
         }
     )
+
+    python_task2 = PythonOperator(
+        task_id='write_file', 
+        python_callable=write_file,
+        op_kwargs = {
+            'filename' : 'demo.txt'
+        }
+    )
+
+    python_task >> python_task2
