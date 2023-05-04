@@ -12,15 +12,9 @@ config:
     logging_level: "INFO"
     fab_logging_level: "INFO"
   logging:
-    # # enable this variable for external logs
-    # remote_logging: "False"
-    # remote_base_log_folder: wasb://wasb-${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net
-    # # remote_log_conn_id: "wasb_logs"
-    # remote_log_conn_id: "wasb_default"
-    remote_logging: False
-    remote_log_conn_id: azure_blob_storage_conn
-    remote_base_log_folder: '${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net'
-    # remote_base_log_folder: '${AIRFLOW_LOG_CONTAINER}-logs@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net/test'
+    remote_logging: True
+    remote_log_conn_id: azure-storage
+    remote_base_log_folder: 'wasb://${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net'
 
 env:
   - name: AIRFLOW__CORE__LOAD_EXAMPLES
