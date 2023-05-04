@@ -1,3 +1,4 @@
+import queue
 import pendulum
 from airflow import DAG
 from datetime import datetime, timedelta
@@ -15,10 +16,11 @@ default_args = {
 }
 
 def second_task():
-    print('Hello from second_task')
-    # raise ValueError('This will turns the python task in failed state')
+    return f'Hello from Task2!'
+    
 
-def third_task():
+def third_task(ti):
+    message = ti.xcom_pull(task_ids=["python_task_2"])[0]
     print('Hello from third_task')
     # raise ValueError('This will turns the python task in failed state')
 
@@ -30,12 +32,24 @@ with DAG(
 ) as dag:
     
     # Task 1
-    bash_task_1 = BashOperator(task_id='bash_task_1', bash_command="echo 'first task'")
+    bash_task_1 = BashOperator(
+        task_id='bash_task_1',
+        queue='kubernetes',
+        bash_command="echo 'first task'"
+    )
     
     # Task 2
-    python_task_2 = PythonOperator(task_id='python_task_2', python_callable=second_task, depends_on_past=True)
+    python_task_2 = PythonOperator(
+        task_id='python_task_2',
+        queue='kubernetes',
+        python_callable=second_task
+    )
 
     # Task 3
-    python_task_3 = PythonOperator(task_id='python_task_3', python_callable=third_task)
+    python_task_3 = PythonOperator(
+        task_id='python_task_3',
+        queue='kubernetes', 
+        python_callable=third_task
+    )
 
     bash_task_1 >> python_task_2 >> python_task_3
