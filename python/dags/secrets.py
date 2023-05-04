@@ -21,12 +21,11 @@ default_args = {
 
 
 def write_file(templates_dict):
-    content = templates_dict["content"]
-    print(f'the content is: {content}')
     filepath = f'{pathlib.Path().resolve()}/{templates_dict["filename"]}'
+    secret = templates_dict["secret"]
     print(f'writing file {filepath}')
     with open(filepath, "w") as file:
-        file.write(f"This is my demo file!\nThe secret is {content[0]}\n")
+        file.write(f"This is my demo file!\nThe secret is {secret}\n")
     return filepath
 
 
@@ -50,7 +49,7 @@ with DAG(
         python_callable=write_file,
         templates_dict = {
             'filename' : "{{ ts }}.txt",
-            'content' : '{{var.value.get("my-secret")}}'
+            'secret' : '{{var.value.get("my-secret")}}'
         }
     )
 
