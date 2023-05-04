@@ -3,6 +3,7 @@ from airflow import DAG
 from airflow.models import Variable
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.azure.transfers.local_to_wasb import LocalFilesystemToWasbOperator
 import pathlib
 
 default_args = {
@@ -27,7 +28,7 @@ def write_file(**kwargs):
     content = kwargs['ti'].xcom_pull(task_ids=['get_secret'])
     print(f'writing file {pathlib.Path().resolve()}/{filename}')
     f = open(filename, "w")
-    f.write(f"This is my demo file!\n The secret is {content[0]}")
+    f.write(f"This is my demo file!\nThe secret is {content[0]} .\n")
     f.close()
 
 
@@ -38,7 +39,7 @@ with DAG(
   catchup=False
 ) as dag:
     
-    python_task = PythonOperator(
+    task = PythonOperator(
         task_id='get_secret', 
         python_callable=get_secrets,
         op_kwargs = {
@@ -46,7 +47,7 @@ with DAG(
         }
     )
 
-    python_task2 = PythonOperator(
+    task2 = PythonOperator(
         task_id='write_file', 
         python_callable=write_file,
         op_kwargs = {
@@ -54,4 +55,13 @@ with DAG(
         }
     )
 
-    python_task >> python_task2
+    task3 = LocalFilesystemToWasbOperator(
+        task_id='send_to_blob',
+        wasb_conn_id='wasb_blob',
+        file_path='/opt/airflow/demo.txt',
+        container_name='test',
+        create_container=True,
+        blob_name='demo.txt'
+    )
+
+    task >> task2 >> task3
