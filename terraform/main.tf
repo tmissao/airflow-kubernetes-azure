@@ -95,7 +95,7 @@ resource "azurerm_key_vault" "this" {
 
 resource "azurerm_key_vault_secret" "airflow_storage_connection" {
   name         = "${var.airflow.keyvault_connections_prefix}-azure-storage"
-  value        = "wasb://${urlencode(azurerm_storage_account.this.name)}:${urlencode(azurerm_storage_account.this.primary_access_key)}"
+  value        = "wasb://${urlencode(azurerm_storage_account.this.name)}:${urlencode(azurerm_storage_account.this.primary_access_key)}@"
   key_vault_id = azurerm_key_vault.this.id
   tags = local.tags
 }

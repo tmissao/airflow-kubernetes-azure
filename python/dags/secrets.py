@@ -24,8 +24,10 @@ def get_secrets(**kwargs):
 
 
 def write_file(**kwargs):
+    print(f'kwargs: ${kwargs}')
     filename = kwargs["filename"]
     content = kwargs['ti'].xcom_pull(task_ids=['get_secret'])
+    print(f'writing file generated {kwargs["templates_dict"]["filename"]}')
     print(f'writing file {pathlib.Path().resolve()}/{filename}')
     f = open(filename, "w")
     f.write(f"This is my demo file!\nThe secret is {content[0]} .\n")
@@ -52,6 +54,9 @@ with DAG(
         python_callable=write_file,
         op_kwargs = {
             'filename' : 'demo.txt'
+        },
+        templates_dict = {
+            'filename' : "{{ ts }}.txt"
         }
     )
 
