@@ -21,7 +21,7 @@ def second_task():
 
 def third_task(ti):
     message = ti.xcom_pull(task_ids=["python_task_2"])[0]
-    print('Hello from third_task')
+    print(f'The value returned from task2 was: {message}')
     # raise ValueError('This will turns the python task in failed state')
 
 with DAG(
