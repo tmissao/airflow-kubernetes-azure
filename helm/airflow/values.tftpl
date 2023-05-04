@@ -1,4 +1,4 @@
-executor: CeleryExecutor
+executor: CeleryKubernetesExecutor
 fernetKey: wF3D9vdlHWm4liB8r90gvRjvgGPTHjREB9SI8hNF31U=
 webserverSecretKey: 06d12648d9f535f8c5e51c9e9a49571b
 
@@ -12,7 +12,7 @@ config:
     logging_level: "INFO"
     fab_logging_level: "INFO"
   logging:
-    remote_logging: True
+    remote_logging: "True"
     remote_log_conn_id: azure-storage
     remote_base_log_folder: 'wasb://${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net'
 
@@ -92,9 +92,6 @@ extraSecrets:
   azure-airflow-secrets:
     data: |
       azure-client-secret: '${AZURE_CLIENT_SECRET}'
-#   airflow-connections:
-#     data:
-#       AIRFLOW_CONN_WASB_LOGS: 'wasb://${AIRFLOW_LOG_STORAGE_ACCOUNT}:${AZURE_STORAGE_ACCOUNT_LOGS_CONNECTION_STRING}'
 
 createUserJob:
   useHelmHooks: false

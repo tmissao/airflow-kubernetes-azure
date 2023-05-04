@@ -1,9 +1,13 @@
 import pathlib
+import logging
 from airflow import DAG
 from airflow.models import Variable
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.azure.transfers.local_to_wasb import LocalFilesystemToWasbOperator
+
+logger = logging.getLogger('azure')
+logger.setLevel(logging.WARNING)
 
 default_args = {
     'start_date': datetime(2023, 1, 26),

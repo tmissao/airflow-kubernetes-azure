@@ -21,9 +21,3 @@ output "kubernetes" {
     nginx_ingress_public_ip = azurerm_public_ip.this.ip_address
   }
 }
-
-output "storage" {
-  value = {
-    conn = "wasb://${azurerm_storage_account.this.name}:${urlencode(nonsensitive(azurerm_storage_account.this.primary_access_key))}"
-  }
-}
