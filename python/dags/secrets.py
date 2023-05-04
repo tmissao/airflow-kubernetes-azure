@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.azure.transfers.local_to_wasb import LocalFilesystemToWasbOperator
 
+# Set Azure Log Level to avoid noise
 logger = logging.getLogger('azure')
 logger.setLevel(logging.WARNING)
 
