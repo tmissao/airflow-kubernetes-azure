@@ -1,10 +1,9 @@
-import pendulum
+import pathlib
 from airflow import DAG
 from airflow.models import Variable
 from datetime import datetime, timedelta
 from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.azure.transfers.local_to_wasb import LocalFilesystemToWasbOperator
-import pathlib
 
 default_args = {
     'start_date': datetime(2023, 1, 26),
@@ -14,23 +13,23 @@ default_args = {
     'retry_delay': timedelta(seconds=30),
 }
 
-def get_secrets(**kwargs):
-    print(f'value var_name is {kwargs["var_name"]}')
-    variable = Variable.get(kwargs["var_name"])
-    print(f'the value of the secret is: ${variable}')
-    for x in variable:
-        print(f'secret: {x}')
-    return variable
+# def get_secrets(**kwargs):
+#     print(f'value var_name is {kwargs["var_name"]}')
+#     variable = Variable.get(kwargs["var_name"])
+#     print(f'the value of the secret is: ${variable}')
+#     for x in variable:
+#         print(f'secret: {x}')
+#     return variable
 
 
-def write_file(ti, templates_dict):
-    content = ti.xcom_pull(task_ids=['get_secret'])
-    file = f'{pathlib.Path().resolve()}/{templates_dict["filename"]}'
+def write_file(templates_dict):
+    content = templates_dict["content"]
+    print(f'the content is: {content}')
+    filepath = f'{pathlib.Path().resolve()}/{templates_dict["filename"]}'
     print(f'writing file {file}')
-    f = open(file, "w")
-    f.write(f"This is my demo file!\nThe secret is {content[0]}\n")
-    f.close()
-    return file
+    with open(filepath, "w") as file:
+        file.write(f"This is my demo file!\nThe secret is {content[0]}\n")
+    return filepath
 
 
 with DAG(
@@ -40,22 +39,20 @@ with DAG(
   catchup=False
 ) as dag:
     
-    task = PythonOperator(
-        task_id='get_secret', 
-        python_callable=get_secrets,
-        op_kwargs = {
-            'var_name' : 'my-secret'
-        }
-    )
+    # task = PythonOperator(
+    #     task_id='get_secret', 
+    #     python_callable=get_secrets,
+    #     op_kwargs = {
+    #         'var_name' : 'my-secret'
+    #     }
+    # )
 
     task2 = PythonOperator(
         task_id='write_file', 
         python_callable=write_file,
-        op_kwargs = {
-            'filename' : 'demo.txt'
-        },
         templates_dict = {
-            'filename' : "{{ ts }}.txt"
+            'filename' : "{{ ts }}.txt",
+            'content' : "{{var.value.my-secret}}"
         }
     )
 
@@ -68,4 +65,4 @@ with DAG(
         blob_name='{{ ts_nodash }}'
     )
 
-    task >> task2 >> task3
+    task2 >> task3
