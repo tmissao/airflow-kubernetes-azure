@@ -23,15 +23,14 @@ def get_secrets(**kwargs):
     return variable
 
 
-def write_file(**kwargs):
-    print(f'kwargs: ${kwargs}')
-    filename = kwargs["filename"]
-    content = kwargs['ti'].xcom_pull(task_ids=['get_secret'])
-    print(f'writing file generated {kwargs["templates_dict"]["filename"]}')
-    print(f'writing file {pathlib.Path().resolve()}/{filename}')
-    f = open(filename, "w")
-    f.write(f"This is my demo file!\nThe secret is {content[0]} .\n")
+def write_file(ti, templates_dict):
+    content = ti.xcom_pull(task_ids=['get_secret'])
+    file = f'{pathlib.Path().resolve()}{templates_dict["filename"]}'
+    print(f'writing file {file}')
+    f = open(file, "w")
+    f.write(f"This is my demo file!\nThe secret is {content[0]}\n")
     f.close()
+    return file
 
 
 with DAG(
@@ -63,10 +62,10 @@ with DAG(
     task3 = LocalFilesystemToWasbOperator(
         task_id='send_to_blob',
         wasb_conn_id='azure-storage',
-        file_path='/opt/airflow/demo.txt',
+        file_path='{{ ti.xcom_pull(task_ids=["write_file"])[0] }}',
         container_name='upload',
         create_container=True,
-        blob_name='demo.txt'
+        blob_name='{{ ts_nodash }}'
     )
 
     task >> task2 >> task3
