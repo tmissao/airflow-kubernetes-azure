@@ -52,7 +52,7 @@ with DAG(
         python_callable=write_file,
         templates_dict = {
             'filename' : "{{ ts }}.txt",
-            'content' : "{{var.value.my-secret}}"
+            'content' : '{{var.value.get("my-secret")}}'
         }
     )
 
