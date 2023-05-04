@@ -15,6 +15,8 @@ config:
     remote_logging: "True"
     remote_log_conn_id: azure-storage
     remote_base_log_folder: 'wasb://${AIRFLOW_LOG_CONTAINER}@${AIRFLOW_LOG_STORAGE_ACCOUNT}.blob.core.windows.net'
+  celery:
+    flower_url_prefix: ''
 
 env:
   - name: AIRFLOW__CORE__LOAD_EXAMPLES
@@ -63,7 +65,7 @@ redis:
   enabled: false
 
 flower:
-  enabled: false
+  enabled: true
 
 statsd:
   enabled: false
