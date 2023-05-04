@@ -17,8 +17,6 @@ default_args = {
 #     print(f'value var_name is {kwargs["var_name"]}')
 #     variable = Variable.get(kwargs["var_name"])
 #     print(f'the value of the secret is: ${variable}')
-#     for x in variable:
-#         print(f'secret: {x}')
 #     return variable
 
 
@@ -26,7 +24,7 @@ def write_file(templates_dict):
     content = templates_dict["content"]
     print(f'the content is: {content}')
     filepath = f'{pathlib.Path().resolve()}/{templates_dict["filename"]}'
-    print(f'writing file {file}')
+    print(f'writing file {filepath}')
     with open(filepath, "w") as file:
         file.write(f"This is my demo file!\nThe secret is {content[0]}\n")
     return filepath
