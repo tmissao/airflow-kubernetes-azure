@@ -143,7 +143,7 @@ except Exception as e:
 
 # Check for RenderedTaskInstanceFields model
 try:
-    from airflow.models import RenderedTaskInstanceFields
+    from airflow.models.renderedtifields import RenderedTaskInstanceFields
     DATABASE_OBJECTS.append({
         "airflow_db_model": RenderedTaskInstanceFields,
         "age_check_column": RenderedTaskInstanceFields.execution_date,

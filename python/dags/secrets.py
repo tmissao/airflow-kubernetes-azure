@@ -29,7 +29,7 @@ def write_file(templates_dict):
 
 
 with DAG(
-  dag_id='secrets_test', 
+  dag_id='secrets-test', 
   schedule_interval="*/60 * * * *", 
   default_args=default_args,
   catchup=False

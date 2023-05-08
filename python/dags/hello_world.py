@@ -25,7 +25,7 @@ def third_task(ti):
     # raise ValueError('This will turns the python task in failed state')
 
 with DAG(
-  dag_id='hello_world', 
+  dag_id='hello-world', 
   schedule_interval="*/60 * * * *", 
   default_args=default_args,
   catchup=False
