@@ -146,7 +146,7 @@ try:
     from airflow.models.renderedtifields import RenderedTaskInstanceFields
     DATABASE_OBJECTS.append({
         "airflow_db_model": RenderedTaskInstanceFields,
-        "age_check_column": RenderedTaskInstanceFields.execution_date,
+        "age_check_column": RenderedTaskInstanceFields.run_id,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None
@@ -172,7 +172,7 @@ except Exception as e:
 # Check for celery executor
 airflow_executor = str(conf.get("core", "executor"))
 logging.info("Airflow Executor: " + str(airflow_executor))
-if(airflow_executor == "CeleryExecutor"):
+if(airflow_executor == "CeleryExecutor" or airflow_executor == "CeleryKubernetesExecutor"):
     logging.info("Including Celery Modules")
     try:
         from celery.backends.database.models import Task, TaskSet
