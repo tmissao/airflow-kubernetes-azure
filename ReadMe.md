@@ -1,24 +1,70 @@
-# Airflow Kubernetes Demo
+# Airflow on Kubernetes 
 ---
 
-This repository aims to create an Airflow environment on a Kubernetes cluster, following the best practices.
+This project aims to create a production ready Airflow environment in Kubernetes Cluster at Azure Cloud Provider, using Terraform in order to provision the underlying resources and Helm Charts to install applications in Kubernetes.
+
+The Goals of this project are:
+
+1. Install Airflow in Kubernetes using [Helm Official Chart](https://airflow.apache.org/docs/helm-chart/stable/index.html).
+2. Configure an external Database ([Postgres](https://www.postgresql.org/)) for the Airflow Metastore using SSL.
+3. Configure Connection Pool ([PgBouncer](https://www.pgbouncer.org/2023/05/pgbouncer-1-19-0)) in order reduce the number of open connections.
+4. Configure an external Redis Cluster to be used as [Celery Backend](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html).
+5. Configure Airflow [CeleryKubernetes Executor](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/celery_kubernetes.html).
+6. Mounting DAGs from a Git Repository using [Git-Sync SideCar](https://airflow.apache.org/docs/helm-chart/stable/manage-dags-files.html#mounting-dags-using-git-sync-sidecar-without-persistence).
+7. Include External Airflow Providers ([Microsoft Azure](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/index.html)) on Airflow Image.
+8. Configure Airflow Task Logging to use [Azure Blob Storage](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/logging/index.html).
+9. Configure Airflow to use Azure Key Vault as [Secret Backend](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/secrets-backends/azure-key-vault.html).
+10. Configure and expose Airflow UI using [Nginx Ingress](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/).
+11. Monitore Celery Executor using [Flower](https://flower.readthedocs.io/en/latest/).
+12. Include/Run Maintenance DAGs.
 
 
-## Create a Fernet Key
-```python
+## Setup
+---
+
+- [Create an Azure Account](https://azure.microsoft.com/en-us/free/)
+- [Install Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- [Install TF_ENV](https://github.com/tfutils/tfenv)
+- [Install Python 3.7](https://www.linuxcapable.com/how-to-install-python-3-7-on-ubuntu-20-04-lts/)
+- [Install Docker](https://docs.docker.com/engine/install/ubuntu/)
+
+## Provisioning Infrastructure
+---
+First of all, generate a brand new [Fernet Key](https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/security/secrets/fernet.html) (used to encrypt passwords in the connection configuration and variable configuration), and [WebServer Secret Key](https://airflow.apache.org/docs/helm-chart/stable/production-guide.html#webserver-secret-key) (used to sign session cookies and perform security related functions).
+
+### Generate Fernet Key
+---
+```bash
 python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)"
 ```
 
-## Create WebServer Key
-```python
-python3 -c 'import secrets; print(secrets.token_hex(16))'
-```
+Place the generated value under the variable `airflow.fernet_key` at [terraform variables file](./terraform/variables.tf)
 
-## Installing
+### Generate WebServer Secret Key
+---
 ```bash
-helm repo add apache-airflow https://airflow.apache.org
-helm upgrade --install airflow apache-airflow/airflow --namespace airflow
+python -c 'import secrets; print(secrets.token_hex(16))'
 ```
 
-az account set --subscription 33d7eadb-fb41-4ef5-9c37-0d67c95a1e70
-az aks get-credentials --resource-group poc-airflow-kubernetes-rg --name poc-airflow-aks
+Place the generated value under the variable `airflow.webserver_secret_key` at [terraform variables file](./terraform/variables.tf)
+
+### Execute Terraform
+--- 
+
+This environment is totally build using [Terraform](https://www.terraform.io/)
+
+```bash
+# from repository root folder
+cd infrastructure
+az login
+tfenv install
+tfenv use
+terraform init
+terraform apply
+```
+
+## Outputs
+---
+
+## Results
+---

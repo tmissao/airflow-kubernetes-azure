@@ -39,6 +39,10 @@ resource "helm_release" "airflow" {
     templatefile("../helm/airflow/values.tftpl", {
       AIRFLOW_IMAGE_REPOSITORY = "${azurerm_container_registry.this.name}.azurecr.io/${var.airflow_custom_image.acr_image_path}"
       AIRFLOW_IMAGE_TAG = "latest"
+      AIRFLOW_FERNET_KEY = var.airflow.fernet_key
+      AIRFLOW_WEBSERVER_SECRET_KEY = var.airflow.webserver_secret_key
+      AIRFLOW_DEFAULT_USER_USERNAME = var.airflow.default_user.username
+      AIRFLOW_DEFAULT_USER_PASSWORD = var.airflow.default_user.password
       POSTGRES_USER      = azurerm_postgresql_flexible_server.this.administrator_login
       POSTGRES_PASSWORD = nonsensitive(azurerm_postgresql_flexible_server.this.administrator_password)
       POSTGRES_HOST = azurerm_postgresql_flexible_server.this.fqdn
@@ -55,6 +59,9 @@ resource "helm_release" "airflow" {
       AZURE_CLIENT_SECRET = base64encode(nonsensitive(azuread_application_password.this.value))
       KEYVAULT_CONNECTIONS_PREFIX = var.airflow.keyvault_connections_prefix
       KEYVAULT_VARIABLES_PREFIX = var.airflow.keyvault_variables_prefix
+      AIRFLOW_DAG_GITSYNC_REPO = var.airflow.dag_repository.repo
+      AIRFLOW_DAG_GITSYNC_BRANCH = var.airflow.dag_repository.branch
+      AIRFLOW_DAG_GITSYNC_SUBPATH = var.airflow.dag_repository.subPath 
     })
   ]
   depends_on = [

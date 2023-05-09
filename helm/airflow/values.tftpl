@@ -1,6 +1,6 @@
 executor: CeleryKubernetesExecutor
-fernetKey: wF3D9vdlHWm4liB8r90gvRjvgGPTHjREB9SI8hNF31U=
-webserverSecretKey: 06d12648d9f535f8c5e51c9e9a49571b
+fernetKey: ${AIRFLOW_FERNET_KEY}
+webserverSecretKey: ${AIRFLOW_WEBSERVER_SECRET_KEY}
 
 images:
   airflow:
@@ -35,9 +35,9 @@ dags:
     enabled: False
   gitSync:
     enabled: True
-    repo: https://github.com/tmissao/airflow-kubernetes-azure
-    branch: master
-    subPath: python/dags
+    repo: ${AIRFLOW_DAG_GITSYNC_REPO}
+    branch: ${AIRFLOW_DAG_GITSYNC_BRANCH}
+    subPath: ${AIRFLOW_DAG_GITSYNC_SUBPATH}
 
 ingress:
   web:
@@ -72,10 +72,8 @@ statsd:
 
 webserver:
   defaultUser:
-    username: tmissao
-    password: 123ate5
-    firstName: Tiago
-    lastName: Missão
+    username: ${AIRFLOW_DEFAULT_USER_USERNAME}
+    password: ${AIRFLOW_DEFAULT_USER_PASSWORD}
 
 logs:
   persistence:

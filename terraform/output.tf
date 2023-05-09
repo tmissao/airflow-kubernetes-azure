@@ -21,3 +21,15 @@ output "kubernetes" {
     nginx_ingress_public_ip = azurerm_public_ip.this.ip_address
   }
 }
+
+output "airflow" {
+  value = {
+    webserver = {
+      host = azurerm_public_ip.this.ip_address
+      login = {
+        username = var.airflow.default_user.username
+        password = var.airflow.default_user.password
+      }
+    }
+  }
+}
