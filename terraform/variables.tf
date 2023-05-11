@@ -226,7 +226,7 @@ variable "airflow" {
     chart_version = "1.9.0"
     keyvault_connections_prefix = "airflow-connections"
     keyvault_variables_prefix = "airflow-variables"
-    fernet_key = "wF3D9vdlHWm4liB8r90gvRjvgGPTHjREB9SI8hNF31U"
+    fernet_key = "nXjlv8Ipvvaq-dTLzT9u_j7dOG7ZX5-GLeza6LRctFQ="
     webserver_secret_key = "06d12648d9f535f8c5e51c9e9a49571b"
     dag_repository = {
       repo = "https://github.com/tmissao/airflow-kubernetes-azure"

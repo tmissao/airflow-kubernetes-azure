@@ -66,5 +66,38 @@ terraform apply
 ## Outputs
 ---
 
+After execute the command above, go to your web browser and access the public ip specified under the output `airflow.webserver.host` and login in your brand new Airflow!
+
+```bash
+
+airflow = {
+  "webserver" = {
+    "host" = "20.112.89.18" # <-- Airflow UI Address
+    "login" = {
+      "password" = "admin"  # <-- Airflow Login Password
+      "username" = "admin"  # <-- Airflow Login Username
+    }
+  }
+}
+
+kubernetes = {
+  "fqnd" = "poc-airflow-aks-9ftxhpwd.hcp.westus2.azmk8s.io"
+  "nginx_ingress_public_ip" = "20.112.89.18"
+}
+
+postgres = {
+  "administrator_login" = "adminpsql"
+  "administrator_password" = "dATZS1fyPwo34x7Q"
+  "host" = "poc-airflow-database.postgres.database.azure.com" 
+}
+
+redis = {
+  "host" = "poc-airflow-redis.redis.cache.windows.net"
+  "primary_access_key" = "NdK9GbwXFXT7uDlg1UtSzHCeD4HEYnniTAzCaN7iad8="
+  "primary_connection_string" = "poc-airflow-redis.redis.cache.windows.net:6380,password=NdK9GbwXFXT7uDlg1UtSzHCeD4HEYnniTAzCaN7iad8=,ssl=true,abortConnect=False"
+  "ssl_port" = 6380
+}
+```
+
 ## Results
 ---
