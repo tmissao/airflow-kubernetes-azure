@@ -3,6 +3,8 @@
 
 This project aims to create a production ready Airflow environment in Kubernetes Cluster at Azure Cloud Provider, using Terraform in order to provision the underlying resources and Helm Charts to install applications in Kubernetes.
 
+![Architecture](./artifacts/architecture.png)
+
 The Goals of this project are:
 
 1. Install Airflow in Kubernetes using [Helm Official Chart](https://airflow.apache.org/docs/helm-chart/stable/index.html).
@@ -101,3 +103,12 @@ redis = {
 
 ## Results
 ---
+
+![Demo Airflow](./artifacts/demo-airflow.gif)
+
+## References
+---
+
+- [Official Airflow Helm Chart ](https://airflow.apache.org/docs/helm-chart/stable/index.html)
+- [Airflow Azure Provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/index.html)
+- [Article] (https://dev.to/murilommen/deploy-do-airflow-2-0-no-kubernetes-com-helm-1a96)
