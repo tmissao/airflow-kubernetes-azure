@@ -111,4 +111,4 @@ redis = {
 
 - [Official Airflow Helm Chart ](https://airflow.apache.org/docs/helm-chart/stable/index.html)
 - [Airflow Azure Provider](https://airflow.apache.org/docs/apache-airflow-providers-microsoft-azure/stable/index.html)
-- [Article] (https://dev.to/murilommen/deploy-do-airflow-2-0-no-kubernetes-com-helm-1a96)
+- [Article](https://dev.to/murilommen/deploy-do-airflow-2-0-no-kubernetes-com-helm-1a96)
