@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-05-11T21:18:57.953Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="modX2U0Q3EHc69fEBhSZ" version="21.2.2" type="device">
+<mxfile host="app.diagrams.net" modified="2023-05-12T12:18:34.471Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="_yYFtYMa9JTlWzeOibwi" version="21.2.2" type="device">
   <diagram id="cXUkZ1O_WyUq7gMDwtQH" name="Page-1">
     <mxGraphModel dx="2924" dy="806" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -29,7 +29,7 @@
           <mxGeometry x="168.13" y="320" width="89.87" height="30" as="geometry" />
         </mxCell>
         <mxCell id="QM8jWkaCNN1XW6rL4ih6-4" value="PostgreSQL Database&lt;br&gt;(Metabase)" style="aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg;" parent="1" vertex="1">
-          <mxGeometry x="719" y="485.5" width="48" height="64" as="geometry" />
+          <mxGeometry x="718.5" y="490" width="48" height="64" as="geometry" />
         </mxCell>
         <mxCell id="0fG54sv16ZnXQTWY5df4-10" value="Airflow UI" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="QM8jWkaCNN1XW6rL4ih6-7" target="0fG54sv16ZnXQTWY5df4-6">
           <mxGeometry relative="1" as="geometry" />
@@ -59,16 +59,16 @@
         </mxCell>
         <mxCell id="0fG54sv16ZnXQTWY5df4-15" value="DAGs Logs" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0fG54sv16ZnXQTWY5df4-14">
           <mxGeometry x="0.8199" y="2" relative="1" as="geometry">
-            <mxPoint x="-13" y="-10" as="offset" />
+            <mxPoint x="-23" y="-10" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0fG54sv16ZnXQTWY5df4-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.042;entryY=0.547;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="0fG54sv16ZnXQTWY5df4-6" target="QM8jWkaCNN1XW6rL4ih6-4">
+        <mxCell id="0fG54sv16ZnXQTWY5df4-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="0fG54sv16ZnXQTWY5df4-6" target="QM8jWkaCNN1XW6rL4ih6-4">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="570" y="405" />
               <mxPoint x="570" y="530" />
-              <mxPoint x="712" y="530" />
-              <mxPoint x="712" y="521" />
+              <mxPoint x="742" y="530" />
+              <mxPoint x="742" y="532" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -78,7 +78,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="0fG54sv16ZnXQTWY5df4-19" value="Celery Broker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="0fG54sv16ZnXQTWY5df4-6" target="0fG54sv16ZnXQTWY5df4-5">
-          <mxGeometry x="0.6479" y="11" relative="1" as="geometry">
+          <mxGeometry x="0.5584" y="15" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="650" y="405" />
               <mxPoint x="650" y="405" />

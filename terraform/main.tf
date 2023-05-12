@@ -9,7 +9,7 @@ resource "azurerm_virtual_network" "this" {
   address_space       = var.virtual_network.address_space
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  tags = local.tags
+  tags                = local.tags
 }
 
 resource "azurerm_subnet" "this" {
@@ -50,7 +50,7 @@ resource "azurerm_container_registry" "this" {
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   sku                 = var.acr.sku
-  tags = local.tags
+  tags                = local.tags
 }
 
 resource "azurerm_storage_account" "this" {
@@ -59,7 +59,7 @@ resource "azurerm_storage_account" "this" {
   location                 = azurerm_resource_group.this.location
   account_tier             = var.storage_account.tier
   account_replication_type = var.storage_account.account_replication_type
-  tags = local.tags
+  tags                     = local.tags
 }
 
 resource "azurerm_storage_container" "this" {
@@ -76,7 +76,7 @@ resource "azurerm_key_vault" "this" {
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = var.keyvault.soft_delete_retention_days
   purge_protection_enabled    = var.keyvault.purge_protection_enabled
-  sku_name = var.keyvault.sku_name
+  sku_name                    = var.keyvault.sku_name
   dynamic "access_policy" {
     for_each = [
       data.azurerm_client_config.current.object_id,
@@ -87,7 +87,7 @@ resource "azurerm_key_vault" "this" {
       object_id = access_policy.value
       secret_permissions = [
         "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
-      ] 
+      ]
     }
   }
   tags = local.tags
@@ -97,39 +97,39 @@ resource "azurerm_key_vault_secret" "airflow_storage_connection" {
   name         = "${var.airflow.keyvault_connections_prefix}-azure-storage"
   value        = "wasb://${urlencode(azurerm_storage_account.this.name)}:${urlencode(azurerm_storage_account.this.primary_access_key)}@"
   key_vault_id = azurerm_key_vault.this.id
-  tags = local.tags
+  tags         = local.tags
 }
 
 resource "azurerm_key_vault_secret" "my_secret" {
   name         = "${var.airflow.keyvault_variables_prefix}-my-secret"
   value        = "hello from secret!"
   key_vault_id = azurerm_key_vault.this.id
-  tags = local.tags
+  tags         = local.tags
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
-  name = var.kubernetes.name
-  location = azurerm_resource_group.this.location
+  name                = var.kubernetes.name
+  location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  kubernetes_version = var.kubernetes.version
-  dns_prefix = var.kubernetes.name
+  kubernetes_version  = var.kubernetes.version
+  dns_prefix          = var.kubernetes.name
   default_node_pool {
-    name = var.kubernetes.default_node_pool.name
+    name                = var.kubernetes.default_node_pool.name
     enable_auto_scaling = var.kubernetes.default_node_pool.enable_auto_scaling
-    max_count = var.kubernetes.default_node_pool.max_count
-    node_count = var.kubernetes.default_node_pool.node_count
-    min_count = var.kubernetes.default_node_pool.min_count
-    vm_size = var.kubernetes.default_node_pool.vm_size
-    node_labels = var.kubernetes.default_node_pool.node_labels
-    vnet_subnet_id = azurerm_subnet.this.id
-    tags = local.tags
+    max_count           = var.kubernetes.default_node_pool.max_count
+    node_count          = var.kubernetes.default_node_pool.node_count
+    min_count           = var.kubernetes.default_node_pool.min_count
+    vm_size             = var.kubernetes.default_node_pool.vm_size
+    node_labels         = var.kubernetes.default_node_pool.node_labels
+    vnet_subnet_id      = azurerm_subnet.this.id
+    tags                = local.tags
   }
   network_profile {
-    network_plugin = var.kubernetes.network_profile.network_plugin
-    network_policy = var.kubernetes.network_profile.network_policy
-    load_balancer_sku = var.kubernetes.network_profile.load_balancer_sku
-    dns_service_ip = cidrhost(var.kubernetes.network_profile.service_cidr, 10)
-    service_cidr   = var.kubernetes.network_profile.service_cidr
+    network_plugin     = var.kubernetes.network_profile.network_plugin
+    network_policy     = var.kubernetes.network_profile.network_policy
+    load_balancer_sku  = var.kubernetes.network_profile.load_balancer_sku
+    dns_service_ip     = cidrhost(var.kubernetes.network_profile.service_cidr, 10)
+    service_cidr       = var.kubernetes.network_profile.service_cidr
     docker_bridge_cidr = var.kubernetes.network_profile.docker_bridge_cidr
   }
   identity {
@@ -139,8 +139,8 @@ resource "azurerm_kubernetes_cluster" "this" {
 }
 
 resource "random_password" "postgres" {
-  length           = 16
-  special          = false
+  length  = 16
+  special = false
 }
 
 resource "azurerm_postgresql_flexible_server" "this" {
@@ -152,8 +152,8 @@ resource "azurerm_postgresql_flexible_server" "this" {
   administrator_password = random_password.postgres.result
   storage_mb             = var.postgres.storage_mb
   sku_name               = var.postgres.sku_name
-  zone = var.postgres.zone
-  tags = local.tags
+  zone                   = var.postgres.zone
+  tags                   = local.tags
 }
 
 resource "azurerm_postgresql_flexible_server_database" "this" {
@@ -164,7 +164,7 @@ resource "azurerm_postgresql_flexible_server_database" "this" {
 }
 
 resource "azurerm_postgresql_flexible_server_firewall_rule" "this" {
-  for_each = var.postgres.allowed_to_connect_ips
+  for_each         = var.postgres.allowed_to_connect_ips
   name             = each.key
   server_id        = azurerm_postgresql_flexible_server.this.id
   start_ip_address = each.value.start_ip_address
@@ -179,7 +179,7 @@ resource "azurerm_redis_cache" "this" {
   family              = var.redis.family
   sku_name            = var.redis.sku_name
   enable_non_ssl_port = var.redis.enable_non_ssl_port
-  redis_version = var.redis.redis_version
+  redis_version       = var.redis.redis_version
   redis_configuration {
     enable_authentication = var.redis.redis_configuration.enable_authentication
   }
@@ -190,9 +190,9 @@ resource "azurerm_public_ip" "this" {
   name                = var.nginx_public_ip.name
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  allocation_method = var.nginx_public_ip.allocation_method
-  sku               = var.nginx_public_ip.sku
-  tags = local.tags
+  allocation_method   = var.nginx_public_ip.allocation_method
+  sku                 = var.nginx_public_ip.sku
+  tags                = local.tags
 }
 
 resource "null_resource" "build_airflow_docker_image" {
@@ -202,9 +202,9 @@ resource "null_resource" "build_airflow_docker_image" {
   provisioner "local-exec" {
     command = "/bin/bash ./scripts/build-image.sh"
     environment = {
-      ACR_REGISTRY_NAME  = azurerm_container_registry.this.name
-      ACR_IMAGE_PATH  = var.airflow_custom_image.acr_image_path
-      DOCKERFILE_PATH = var.airflow_custom_image.dockerfile_path
+      ACR_REGISTRY_NAME = azurerm_container_registry.this.name
+      ACR_IMAGE_PATH    = var.airflow_custom_image.acr_image_path
+      DOCKERFILE_PATH   = var.airflow_custom_image.dockerfile_path
     }
   }
   depends_on = [
@@ -213,8 +213,8 @@ resource "null_resource" "build_airflow_docker_image" {
 }
 
 resource "azuread_application" "this" {
-  display_name     = "airflow"
-  owners = [data.azuread_client_config.current.object_id]
+  display_name = "airflow"
+  owners       = [data.azuread_client_config.current.object_id]
 }
 
 resource "azuread_application_password" "this" {

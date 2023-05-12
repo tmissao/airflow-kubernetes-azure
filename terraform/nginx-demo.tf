@@ -1,7 +1,7 @@
 resource "kubernetes_deployment_v1" "nginx" {
   count = var.deploy_nginx_demo.deploy ? 1 : 0
   metadata {
-    name = "${var.deploy_nginx_demo.name}-dpl"
+    name   = "${var.deploy_nginx_demo.name}-dpl"
     labels = var.deploy_nginx_demo.labels
   }
   spec {
@@ -53,7 +53,7 @@ resource "kubernetes_ingress_v1" "nginx" {
   metadata {
     name = "${var.deploy_nginx_demo.name}-ign"
     annotations = {
-      "nginx.ingress.kubernetes.io/ssl-redirect": "false"
+      "nginx.ingress.kubernetes.io/ssl-redirect" : "false"
       "nginx.ingress.kubernetes.io/rewrite-target" = "/$2"
     }
   }
@@ -70,7 +70,7 @@ resource "kubernetes_ingress_v1" "nginx" {
               }
             }
           }
-          path = "${var.deploy_nginx_demo.path}(/|$)(.*)"
+          path      = "${var.deploy_nginx_demo.path}(/|$)(.*)"
           path_type = "Prefix"
         }
       }
